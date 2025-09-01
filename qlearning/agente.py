@@ -1,13 +1,14 @@
 import numpy
+import random
 
 
-def q_learning(q_tabela, labirinto, alpha, gama, episodios, entrada, saida):
+def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, saida):
     """
     Run the QLearning algorithm on the given maze environment.
 
     The agent starts at the entrance and explores the maze, updating the QTable
     according to the rewards received for each action. Rewards are defined as:
-    -100 for reaching the exit,
+    100 for reaching the exit,
     -1 for valid moves that are not the exit,
     -10 for invalid moves (hitting a wall or going out of bounds).
 
@@ -36,13 +37,14 @@ def q_learning(q_tabela, labirinto, alpha, gama, episodios, entrada, saida):
 
     tamanho = len(labirinto)
     acoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
+    sucesso = 0
 
     for ep in range(episodios):
         print("Episodio: ", ep)
         estado = entrada
         concluido = False
         passos = 0
-        max_passos = tamanho * tamanho
+        max_passos = tamanho * tamanho * 4
 
         while not concluido and passos < max_passos:
             i, j = estado
@@ -54,7 +56,10 @@ def q_learning(q_tabela, labirinto, alpha, gama, episodios, entrada, saida):
                 q_tabela[i][j].consultar_direita(),
             ]
 
-            acao = int(numpy.argmax(q_values))
+            if random.uniform(0, 1) < epsilon:
+                acao = random.randint(0, 3)
+            else:
+                acao = int(numpy.argmax(q_values))
 
             di, dj = acoes[acao]
             ni, nj = i + di, j + dj
@@ -63,7 +68,8 @@ def q_learning(q_tabela, labirinto, alpha, gama, episodios, entrada, saida):
                 proximo_estado = (ni, nj)
                 if proximo_estado == saida:
                     recompensa = 100
-                    concluido = True
+                    concluido = True  
+                    sucesso += 1
                 else:
                     recompensa = -1
 
@@ -92,4 +98,4 @@ def q_learning(q_tabela, labirinto, alpha, gama, episodios, entrada, saida):
 
             estado = proximo_estado
 
-    return q_tabela
+    return q_tabela, sucesso

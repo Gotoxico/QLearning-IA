@@ -24,43 +24,49 @@ def encontrar_caminho():
         The function prints the generated maze and the path found to the console.
     """
 
-    labirinto, tamanho, entrada, saida = gerar_labirinto_aleatorio(
-        5, 30, "cima", "baixo"
-    )
+    labirinto, tamanho, entrada, saida = gerar_labirinto_aleatorio(5, 30, "cima", "baixo")
     print("Labirinto criado:")
     print(labirinto)
 
     q_tabela = criar_q_tabela(tamanho)
 
-    q_tabela = q_learning(q_tabela, labirinto, 0.1, 0.9, 500, entrada, saida)
+    alpha = 0.1
+    gama = 0.9
+    epsilon = 0.1
+    episodios_treino = 500
+    q_tabela, sucesso = q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios_treino, entrada, saida)
+    print("Episódios de sucesso no treino:", sucesso)
 
+    acoes = [(-1,0),(1,0),(0,-1),(0,1)]
+    max_passos = tamanho * tamanho * 2
     estado = entrada
     caminho = [estado]
     concluido = False
-    max_passos = tamanho * tamanho
+    passos = 0
 
-    while not concluido and len(caminho) < max_passos:
-        i, j = estado
+    while not concluido and passos < max_passos:
+        i,j = estado
         q_values = [
             q_tabela[i][j].consultar_cima(),
             q_tabela[i][j].consultar_baixo(),
             q_tabela[i][j].consultar_esquerda(),
-            q_tabela[i][j].consultar_direita(),
+            q_tabela[i][j].consultar_direita()
         ]
         acao = int(numpy.argmax(q_values))
-        acoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-        di, dj = acoes[acao]
-        ni, nj = i + di, j + dj
+        di,dj = acoes[acao]
+        ni,nj = i+di,j+dj
 
         if 0 <= ni < tamanho and 0 <= nj < tamanho and labirinto[ni][nj] == 1:
-            estado = (ni, nj)
+            estado = (ni,nj)
+            caminho.append(estado)
+            if estado == saida:
+                concluido = True
         else:
+            # Pare se a ação é inválida
             break
 
-        caminho.append(estado)
+        passos += 1
 
-        if estado == saida:
-            concluido = True
-
-    print("\nCaminho encontrado:")
+    print("\nCaminho encontrado (teste da política):")
     print(caminho)
+    print("\nSucesso real:", "Sim" if concluido else "Não")
