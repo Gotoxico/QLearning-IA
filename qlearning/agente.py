@@ -1,6 +1,6 @@
 import numpy
 import random
-
+import matplotlib.pyplot as plt
 
 def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, saida):
     """
@@ -22,6 +22,8 @@ def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, sa
         Learning rate that controls how much new information overrides old values.
     gama : float
         Discount factor for future rewards (0 <= gama <= 1).
+    epsilon : float
+        Exploration rate (0 <= epsilon <= 1).
     episodios : int
         Number of training episodes to run.
     entrada : tuple
@@ -34,6 +36,10 @@ def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, sa
     q_tabela : list[list[Celula]]
         Updated QTable after running the QLearning algorithm.
     """
+    # q_tabela[saida[0]][saida[1]].atualizar_cima(100) 
+    # q_tabela[saida[0]][saida[1]].atualizar_baixo(100) 
+    # q_tabela[saida[0]][saida[1]].atualizar_esquerda(100) 
+    # q_tabela[saida[0]][saida[1]].atualizar_direita(100) 
 
     tamanho = len(labirinto)
     acoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
@@ -97,5 +103,27 @@ def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, sa
                 q_tabela[i][j].atualizar_direita(q_novo)
 
             estado = proximo_estado
-
+            # Plot the Q-values for each cell as text in a grid
+            # fig, ax = plt.subplots(figsize=(tamanho, tamanho))
+            # ax.set_xticks(range(tamanho))
+            # ax.set_yticks(range(tamanho))
+            # ax.set_xticklabels(range(tamanho))
+            # ax.set_yticklabels(range(tamanho))
+            # ax.invert_yaxis()
+            # for x in range(tamanho):
+            #     for y in range(tamanho):
+            #         cell = q_tabela[x][y]
+            #         cima = cell.consultar_cima()
+            #         baixo = cell.consultar_baixo()
+            #         esquerda = cell.consultar_esquerda()
+            #         direita = cell.consultar_direita()
+            #         ax.text(
+            #             y, x,
+            #             f"↑{cima:.1f}\n↓{baixo:.1f}\n←{esquerda:.1f}\n→{direita:.1f}",
+            #             ha='center', va='center', fontsize=8,
+            #             bbox=dict(facecolor='white', edgecolor='black', boxstyle='round,pad=0.3')
+            #         )
+            # ax.set_title("Q-values por célula")
+            # plt.tight_layout()
+            # plt.show()
     return q_tabela, sucesso

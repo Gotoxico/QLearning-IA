@@ -1,5 +1,5 @@
 import numpy
-
+import matplotlib.pyplot as plt
 from labirinto.gerador import gerar_labirinto_aleatorio
 from qlearning.agente import q_learning
 from qlearning.qtable import criar_q_tabela
@@ -24,16 +24,16 @@ def encontrar_caminho():
         The function prints the generated maze and the path found to the console.
     """
 
-    labirinto, tamanho, entrada, saida = gerar_labirinto_aleatorio(5, 30, "cima", "baixo")
+    labirinto, tamanho, entrada, saida = gerar_labirinto_aleatorio(9, 30, "cima", "baixo")
     print("Labirinto criado:")
-    print(labirinto)
-
+    print(f'{labirinto}, \n\n')
+   
     q_tabela = criar_q_tabela(tamanho)
 
     alpha = 0.1
     gama = 0.9
     epsilon = 0.1
-    episodios_treino = 500
+    episodios_treino = 200
     q_tabela, sucesso = q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios_treino, entrada, saida)
     print("Episódios de sucesso no treino:", sucesso)
 
@@ -68,5 +68,22 @@ def encontrar_caminho():
         passos += 1
 
     print("\nCaminho encontrado (teste da política):")
-    print(caminho)
+    print(f'{caminho}\n')
+    CaminhoMatriz = numpy.zeros_like(labirinto)
+    for (i, j) in caminho:
+        CaminhoMatriz[i][j] = 1
+    print(CaminhoMatriz)
+    plt.figure(figsize=(10, 5))
+    plt.subplot(1, 2, 1)
+    plt.imshow(labirinto, cmap='gray')
+    plt.title('Labirinto Gerado')
+    plt.axis('off')
+    plt.subplot(1, 2, 2)
+    plt.imshow(CaminhoMatriz, cmap='gray')
+    plt.title("Caminho encontrado")
+    plt.axis('off')
+
+    plt.tight_layout()
+    plt.show()
+
     print("\nSucesso real:", "Sim" if concluido else "Não")
