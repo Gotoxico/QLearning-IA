@@ -16,7 +16,7 @@ def testar_alphas_gamas():
 
     for i, alpha in enumerate(alphas):
         for j, gama in enumerate(gamas):
-            labirinto, tamanho, entrada, saida = gerar_labirinto_aleatorio(9, 30, "cima", "baixo")
+            labirinto, tamanho, entrada, saida = gerar_labirinto_aleatorio(10, 30, "cima", "baixo")
             q_tabela = criar_q_tabela(tamanho)
             _, sucesso = q_learning(q_tabela, labirinto, alpha, gama, 0.1, 500, entrada, saida)
             resultados[i, j] = sucesso / 500

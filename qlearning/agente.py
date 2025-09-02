@@ -44,6 +44,7 @@ def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, sa
     tamanho = len(labirinto)
     acoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
     sucesso = 0
+    episodios_rewards = []
 
     for ep in range(episodios):
         print("Episodio: ", ep)
@@ -51,6 +52,7 @@ def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, sa
         concluido = False
         passos = 0
         max_passos = tamanho * tamanho * 4
+        total_reward = 0
 
         while not concluido and passos < max_passos:
             i, j = estado
@@ -82,6 +84,8 @@ def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, sa
             else:
                 proximo_estado = estado
                 recompensa = -10
+
+            total_reward += recompensa
 
             ni, nj = proximo_estado
             proximo_q = [
@@ -126,4 +130,5 @@ def q_learning(q_tabela, labirinto, alpha, gama, epsilon, episodios, entrada, sa
             # ax.set_title("Q-values por célula")
             # plt.tight_layout()
             # plt.show()
+            passos += 1
     return q_tabela, sucesso
