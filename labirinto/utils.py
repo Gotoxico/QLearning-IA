@@ -14,9 +14,9 @@ def encontrar_caminho():
     alphas = [0.1, 0.3, 0.5, 0.7, 0.9]
     gamas = [0, 0.5, 0.7, 0.9, 1]
     epsilons = [0.1, 0.5, 0.9]
-    episodios_treino = [100, 500, 3000]
+    episodios_treino = [100, 500, 3000, 10000]
     acoes = [(-1, 0), (1, 0), (0, -1), (0, 1)]
-    n = 9
+    n = 15
     combinations = list(itertools.product(alphas, gamas, epsilons))
     labirinto, tamanho, entrada, saida = gerar_labirinto_aleatorio(
         n, 30, "cima", "baixo"
